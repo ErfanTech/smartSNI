@@ -129,12 +129,24 @@ uninstall() {
         echo "The service is not installed."
         return
     fi
+
     # Stop and disable the service
     sudo systemctl stop sni.service
     sudo systemctl disable sni.service
 
     # Remove service file
     sudo rm /etc/systemd/system/sni.service
+
+    # Remove the smartSNI directory
+    sudo rm -rf /root/smartSNI
+
+    # Restore the original nginx configuration
+    sudo cp /etc/nginx/sites-enabled/default.original /etc/nginx/sites-enabled/default
+    sudo systemctl restart nginx
+
+    # Remove snap-installed go
+    sudo snap remove go
+
     echo "Uninstallation completed successfully."
 }
 
